@@ -19,13 +19,15 @@ export default async function middleware(req: NextRequest) {
   if (!username) {
     return NextResponse.redirect(new URL("/", req.url));
   } else {
-    if ((await getUser(username)) !== null) {
-      if (!req.nextUrl.pathname.endsWith("/complete")) {
-        return NextResponse.redirect(new URL("/quiz/complete", req.url));
-      }
-    } else {
-      if (req.nextUrl.pathname.endsWith("/complete")) {
-        return NextResponse.redirect(new URL("/quiz", req.url));
+    if (!req.nextUrl.pathname.startsWith("/admin")) {
+      if ((await getUser(username)) !== null) {
+        if (!req.nextUrl.pathname.endsWith("/complete")) {
+          return NextResponse.redirect(new URL("/quiz/complete", req.url));
+        }
+      } else {
+        if (req.nextUrl.pathname.endsWith("/complete")) {
+          return NextResponse.redirect(new URL("/quiz", req.url));
+        }
       }
     }
   }
