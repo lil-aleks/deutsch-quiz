@@ -2,7 +2,7 @@
 
 import { supabase } from "@/lib/supabaseClient";
 import { Question } from "@/lib/supabaseTypes";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -17,7 +17,7 @@ export default function Page() {
   const [finished, setFinished] = useState<boolean>(false);
   const router = useRouter();
 
-  const nextQuestion = async () => {
+  const nextQuestion = async (correct: number) => {
     const { data, error } = await supabase
       .rpc("get_random_question", { excluded_ids: shownQuestionIds })
       .select()
@@ -27,7 +27,8 @@ export default function Page() {
       if (error.code === "PGRST116") {
         setFinished(true);
         setQuestion(null);
-        addUser();
+        console.log(correctAwnsers);
+        addUser(correct);
       }
       console.log(error);
     } else {
@@ -44,11 +45,11 @@ export default function Page() {
     return cookie ? cookie.split("=")[1] : null;
   };
 
-  const addUser = async () => {
+  const addUser = async (correct: number) => {
     const { data, error } = await supabase.from("users").upsert([
       {
         username: getCookie("name"),
-        correct: correctAwnsers,
+        correct
       },
     ]).select();
 
@@ -68,10 +69,10 @@ export default function Page() {
       }, 200);
     } else {
       if (shownQuestionIds.length === 1) {
-        nextQuestion();
+        nextQuestion(0);
       }
     }
-  });
+  }, [finished]);
 
   return (
     <div
@@ -89,7 +90,7 @@ export default function Page() {
         <div className="flex items-center w-full justify-center flex-col">
           <h1 className="text-2xl font-bold m-3">{question.question_title}</h1>
           <div className="flex items-center w-full justify-center flex-col">
-            <div className="flex w-full text-xl justify-between px-10">
+            <div className="flex w-full text-xl justify-between max-w-200 px-10">
               <h2>{question.awnser_a}</h2>
               <Image
                 src={
@@ -109,7 +110,7 @@ export default function Page() {
                 }}
               />
             </div>
-            <div className="flex w-full text-xl justify-between px-10">
+            <div className="flex w-full text-xl justify-between max-w-200 px-10">
               <h2>{question.awnser_b}</h2>
               <Image
                 src={
@@ -129,7 +130,7 @@ export default function Page() {
                 }}
               />
             </div>
-            <div className="flex w-full text-xl justify-between px-10">
+            <div className="flex w-full text-xl justify-between max-w-200 px-10">
               <h2>{question.awnser_c}</h2>
               <Image
                 src={
@@ -149,7 +150,7 @@ export default function Page() {
                 }}
               />
             </div>
-            <div className="flex w-full text-xl justify-between px-10">
+            <div className="flex w-full text-xl justify-between max-w-200 px-10">
               <h2>{question.awnser_d}</h2>
               <Image
                 src={
@@ -179,8 +180,11 @@ export default function Page() {
           className="bg-green-400 cursor-pointer border-green-400 mt-5 shadow-lg text-white border-2 font-bold px-4 py-2 rounded-2xl"
           onClick={() => {
             if (selectedAwnser !== null) {
+              let correct = correctAwnsers;
+
               if (question?.correct_awnser === selectedAwnser) {
                 setCorrectAwnsers(correctAwnsers + 1);
+                correct = correct + 1;
                 setAwnser("right");
               } else {
                 setAwnser("wrong");
@@ -188,7 +192,7 @@ export default function Page() {
               
               setSelectedAwnser(null);
               setTimeout(async () => {
-                await nextQuestion();
+                await nextQuestion(correct);
                 setAwnser(null);
               }, 500);
             }
@@ -197,6 +201,7 @@ export default function Page() {
           Weiter
         </button>
       )}
+      {/** For debugging */}
       {correctAwnsers}
     </div>
   );
