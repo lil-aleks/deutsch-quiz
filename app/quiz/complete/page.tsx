@@ -46,9 +46,9 @@ export default function Page() {
     <div className="flex items-center w-full h-full justify-center flex-col">
       <h1 className="text-4xl font-bold m-3">Quiz beendet.</h1>
       <h1 className={`text-xl font-bold m-3 before:text-2xl ${
-        correctAwnsers === maxCorrectAwnsers ? "text-green-500 before:content-['🎉 ']" : 
-        correctAwnsers * 1.5 >= maxCorrectAwnsers ? "text-yellow-300 before:content-['👍 ']" : 
-        correctAwnsers * 2 >= maxCorrectAwnsers ? "text-orange-400 before:content-['🙂 ']" : "text-red-500 before:content-['😭 ']"
+        correctAwnsers === maxCorrectAwnsers ? "text-green-500 before:content-['🎉']" : 
+        correctAwnsers * 1.5 >= maxCorrectAwnsers ? "text-yellow-300 before:content-['👍']" : 
+        correctAwnsers * 2 >= maxCorrectAwnsers ? "text-orange-400 before:content-['🙂']" : "text-red-500 before:content-['😭']"
       }`}>
         Du hast {correctAwnsers} von {maxCorrectAwnsers} richtig.
       </h1>
