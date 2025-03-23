@@ -181,7 +181,6 @@ export default function Page() {
           onClick={() => {
             if (selectedAwnser !== null) {
               let correct = correctAwnsers;
-
               if (question?.correct_awnser === selectedAwnser) {
                 setCorrectAwnsers(correctAwnsers + 1);
                 correct = correct + 1;
