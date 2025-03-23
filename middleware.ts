@@ -14,22 +14,22 @@ export default async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/admin/login", req.url));
     }
   }
-  if (req.nextUrl.pathname.startsWith("/quiz")) {
-    const username = cookie.get("name")?.value;
-    if (!username) {
-      return NextResponse.redirect(new URL("/", req.url));
+  
+  const username = cookie.get("name")?.value;
+  if (!username) {
+    return NextResponse.redirect(new URL("/", req.url));
+  } else {
+    if ((await getUser(username)) !== null) {
+      if (!req.nextUrl.pathname.endsWith("/complete")) {
+        return NextResponse.redirect(new URL("/quiz/complete", req.url));
+      }
     } else {
-      if ((await getUser(username)) !== null) {
-        if (!req.nextUrl.pathname.endsWith("/complete")) {
-          return NextResponse.redirect(new URL("/quiz/complete", req.url));
-        }
-      } else {
-        if (req.nextUrl.pathname.endsWith("/complete")) {
-          return NextResponse.redirect(new URL("/quiz", req.url));
-        }
+      if (req.nextUrl.pathname.endsWith("/complete")) {
+        return NextResponse.redirect(new URL("/quiz", req.url));
       }
     }
   }
+  
   return NextResponse.next();
 }
 
