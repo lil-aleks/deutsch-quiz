@@ -200,8 +200,6 @@ export default function Page() {
           Weiter
         </button>
       )}
-      {/** For debugging */}
-      {correctAwnsers}
     </div>
   );
 }
