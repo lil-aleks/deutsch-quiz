@@ -2,13 +2,13 @@
 
 import { supabase } from "@/lib/supabaseClient";
 import { Question } from "@/lib/supabaseTypes";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [question, setQuestion] = useState<Question | null>(null);
-  const [shownQuestionIds, setShownQuestionIds] = useState<number[]>([1]);
+  const [shownQuestionIds, setShownQuestionIds] = useState<number[]>([0]);
   const [selectedAwnser, setSelectedAwnser] = useState<
     "a" | "b" | "c" | "d" | null
   >(null);
@@ -34,6 +34,7 @@ export default function Page() {
       console.log(data);
       setQuestion(data);
       setShownQuestionIds((prevIds) => [...prevIds, data.id]);
+      console.log(shownQuestionIds);
     }
   };
 
@@ -44,12 +45,12 @@ export default function Page() {
   };
 
   const addUser = async () => {
-    const { data, error } = await supabase.from("users").insert([
+    const { data, error } = await supabase.from("users").upsert([
       {
         username: getCookie("name"),
         correct: correctAwnsers,
       },
-    ]);
+    ]).select();
 
     if (error) {
       console.error(error.message);
@@ -57,16 +58,18 @@ export default function Page() {
       console.log("Added: ", data);
     }
   };
+    
 
   useEffect(() => {
-    nextQuestion();
-  }, []);
-
-  useEffect(() => {
+    
     if (finished) {
       setTimeout(() => {
         router.push("/quiz/complete");
       }, 200);
+    } else {
+      if (shownQuestionIds.length === 1) {
+        nextQuestion();
+      }
     }
   });
 
@@ -182,17 +185,19 @@ export default function Page() {
               } else {
                 setAwnser("wrong");
               }
-              nextQuestion();
+              
               setSelectedAwnser(null);
-              setTimeout(() => {
+              setTimeout(async () => {
+                await nextQuestion();
                 setAwnser(null);
-              }, 300);
+              }, 500);
             }
           }}
         >
           Weiter
         </button>
       )}
+      {correctAwnsers}
     </div>
   );
 }
