@@ -17,7 +17,9 @@ export default async function middleware(req: NextRequest) {
   
   const username = cookie.get("name")?.value;
   if (!username) {
-    return NextResponse.redirect(new URL("/", req.url));
+    if (!req.nextUrl.pathname.endsWith("/")) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
   } else {
     if (!req.nextUrl.pathname.startsWith("/admin")) {
       if ((await getUser(username)) !== null) {
