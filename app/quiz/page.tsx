@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { Question } from "@/lib/supabaseTypes";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [question, setQuestion] = useState<Question | null>(null);
@@ -12,9 +13,9 @@ export default function Page() {
     "a" | "b" | "c" | "d" | null
   >(null);
   const [correctAwnsers, setCorrectAwnsers] = useState<number>(0);
-  const [maxCorrectAwnsers, setMaxCorrectAwnsers] = useState<number>(0);
   const [awnser, setAwnser] = useState<"right" | "wrong" | null>(null);
   const [finished, setFinished] = useState<boolean>(false);
+  const router = useRouter();
 
   const nextQuestion = async () => {
     const { data, error } = await supabase
@@ -36,16 +37,6 @@ export default function Page() {
     }
   };
 
-  const maxQuetions = async () => {
-    const { data, error } = await supabase.from("questions").select("*");
-    if (error) {
-      console.log(error);
-    } else {
-      console.log(data);
-      setMaxCorrectAwnsers(data.length);
-    }
-  };
-
   const getCookie = (name: string) => {
     const cookies = document.cookie.split("; ");
     const cookie = cookies.find((row) => row.startsWith(name + "="));
@@ -56,7 +47,7 @@ export default function Page() {
     const { data, error } = await supabase.from("users").insert([
       {
         username: getCookie("name"),
-        correct: correctAwnsers + 1,
+        correct: correctAwnsers,
       },
     ]);
 
@@ -69,8 +60,15 @@ export default function Page() {
 
   useEffect(() => {
     nextQuestion();
-    maxQuetions();
   }, []);
+
+  useEffect(() => {
+    if (finished) {
+      setTimeout(() => {
+        router.push("/quiz/complete");
+      }, 200);
+    }
+  });
 
   return (
     <div
@@ -83,16 +81,7 @@ export default function Page() {
       }`}
     >
       {question === null ? (
-        finished === true ? (
-          <div className="flex items-center w-full justify-center flex-col">
-            <h1 className="text-2xl font-bold m-3">Quiz beendet</h1>
-            <h1>
-              {correctAwnsers} von {maxCorrectAwnsers} richtig.
-            </h1>
-          </div>
-        ) : (
-          <h1 className="text-2xl font-bold m-3">Laden...</h1>
-        )
+        <h1 className="text-2xl font-bold m-3">Laden...</h1>
       ) : (
         <div className="flex items-center w-full justify-center flex-col">
           <h1 className="text-2xl font-bold m-3">{question.question_title}</h1>
