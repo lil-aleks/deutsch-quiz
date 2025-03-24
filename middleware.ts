@@ -57,5 +57,8 @@ const getUser: (name: string) => Promise<User | null> = async (
 };
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|public/.*\\.(png|svg)$).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image).*)", // Erlaubt alles außer API und Next.js-Assets
+    "!/.*\\.(png|svg|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|eot|otf)$" // Erlaubt statische Medien
+  ],
 };
