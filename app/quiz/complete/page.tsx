@@ -62,69 +62,85 @@ export default function Page() {
       >
         Du hast {correctAwnsers} von {maxCorrectAwnsers} richtig.
       </h1>
-      <div>
-        {questions !== null && questions.map((question) => (
-          <div key={question.id}>
-            <div className="flex w-full text-nowrap justify-between mb-3">
-              <h1 className="font-bold w-2/3 text-nowrap overflow-hidden text-gray-700">
-                {question.question_title}
-              </h1>
+      <div className=" m-3 overflow-y-scroll">
+        {questions !== null &&
+          questions.map((question) => (
+            <div key={question.id} className="my-5">
+              <div className="flex w-full justify-center items-center mb-3">
+                <h1 className="font-bold w-2/3 text-gray-700">
+                  {question.question_title}
+                </h1>
+              </div>
+              <div className="flex w-full my-3 justify-between px-10">
+                <h2>{question.awnser_a}</h2>
+                <Image
+                  src={
+                    question.correct_awnser === "a"
+                      ? getCookie(`${question.id}`) === "a"
+                        ? "/check-orange.svg"
+                        : "/checkbox-check.svg"
+                      : getCookie(`${question.id}`) === "a"
+                      ? "/unchecked-orange.svg"
+                      : "/checkbox-unchecked.svg"
+                  }
+                  width={25}
+                  height={25}
+                  alt=""
+                />
+              </div>
+              <div className="flex w-full my-3 justify-between px-10">
+                <h2>{question.awnser_b}</h2>
+                <Image
+                  src={
+                    question.correct_awnser === "b"
+                      ? getCookie(`${question.id}`) === "b"
+                        ? "/check-orange.svg"
+                        : "/checkbox-check.svg"
+                      : getCookie(`${question.id}`) === "b"
+                      ? "/unchecked-orange.svg"
+                      : "/checkbox-unchecked.svg"
+                  }
+                  width={25}
+                  height={25}
+                  alt=""
+                />
+              </div>
+              <div className="flex w-full my-3 justify-between px-10">
+                <h2>{question.awnser_c}</h2>
+                <Image
+                  src={
+                    question.correct_awnser === "c"
+                      ? getCookie(`${question.id}`) === "c"
+                        ? "/check-orange.svg"
+                        : "/checkbox-check.svg"
+                      : getCookie(`${question.id}`) === "c"
+                      ? "/unchecked-orange.svg"
+                      : "/checkbox-unchecked.svg"
+                  }
+                  width={25}
+                  height={25}
+                  alt=""
+                />
+              </div>
+              <div className="flex w-full my-3 justify-between px-10">
+                <h2>{question.awnser_d}</h2>
+                <Image
+                  src={
+                    question.correct_awnser === "d"
+                      ? getCookie(`${question.id}`) === "d"
+                        ? "/check-orange.svg"
+                        : "/checkbox-check.svg"
+                      : getCookie(`${question.id}`) === "d"
+                      ? "/unchecked-orange.svg"
+                      : "/checkbox-unchecked.svg"
+                  }
+                  width={25}
+                  height={25}
+                  alt=""
+                />
+              </div>
             </div>
-            <div className="flex w-full justify-between px-10">
-              <h2>{question.awnser_a}</h2>
-              <Image
-                src={
-                  question.correct_awnser === "a"
-                    ? "/checkbox-check.svg"
-                    : "/checkbox-unchecked.svg"
-                }
-                width={25}
-                height={25}
-                alt=""
-              />
-            </div>
-            <div className="flex w-full justify-between px-10">
-              <h2>{question.awnser_b}</h2>
-              <Image
-                src={
-                  question.correct_awnser === "b"
-                    ? "/checkbox-check.svg"
-                    : "/checkbox-unchecked.svg"
-                }
-                width={25}
-                height={25}
-                alt=""
-              />
-            </div>
-            <div className="flex w-full justify-between px-10">
-              <h2>{question.awnser_c}</h2>
-              <Image
-                src={
-                  question.correct_awnser === "c"
-                    ? "/checkbox-check.svg"
-                    : "/checkbox-unchecked.svg"
-                }
-                width={25}
-                height={25}
-                alt=""
-              />
-            </div>
-            <div className="flex w-full justify-between px-10">
-              <h2>{question.awnser_d}</h2>
-              <Image
-                src={
-                  question.correct_awnser === "d"
-                    ? "/checkbox-check.svg"
-                    : "/checkbox-unchecked.svg"
-                }
-                width={25}
-                height={25}
-                alt=""
-                className="fill-amber-500"
-              />
-            </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

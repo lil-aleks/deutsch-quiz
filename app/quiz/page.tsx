@@ -46,12 +46,15 @@ export default function Page() {
   };
 
   const addUser = async (correct: number) => {
-    const { data, error } = await supabase.from("users").upsert([
-      {
-        username: getCookie("name"),
-        correct
-      },
-    ]).select();
+    const { data, error } = await supabase
+      .from("users")
+      .upsert([
+        {
+          username: getCookie("name"),
+          correct,
+        },
+      ])
+      .select();
 
     if (error) {
       console.error(error.message);
@@ -59,10 +62,8 @@ export default function Page() {
       console.log("Added: ", data);
     }
   };
-    
 
   useEffect(() => {
-    
     if (finished) {
       setTimeout(() => {
         router.push("/quiz/complete");
@@ -90,7 +91,7 @@ export default function Page() {
         <div className="flex items-center w-full justify-center flex-col">
           <h1 className="text-2xl font-bold m-3">{question.question_title}</h1>
           <div className="flex items-center w-full justify-center flex-col">
-            <div className="flex w-full text-xl justify-between max-w-200 px-10">
+            <div className="flex w-full text-xl justify-between max-w-200 my-3 px-10">
               <h2>{question.awnser_a}</h2>
               <Image
                 src={
@@ -110,7 +111,7 @@ export default function Page() {
                 }}
               />
             </div>
-            <div className="flex w-full text-xl justify-between max-w-200 px-10">
+            <div className="flex w-full text-xl justify-between my-3 max-w-200 px-10">
               <h2>{question.awnser_b}</h2>
               <Image
                 src={
@@ -130,7 +131,7 @@ export default function Page() {
                 }}
               />
             </div>
-            <div className="flex w-full text-xl justify-between max-w-200 px-10">
+            <div className="flex w-full text-xl justify-between my-3 max-w-200 px-10">
               <h2>{question.awnser_c}</h2>
               <Image
                 src={
@@ -150,7 +151,7 @@ export default function Page() {
                 }}
               />
             </div>
-            <div className="flex w-full text-xl justify-between max-w-200 px-10">
+            <div className="flex w-full text-xl justify-between my-3 max-w-200 px-10">
               <h2>{question.awnser_d}</h2>
               <Image
                 src={
@@ -190,7 +191,7 @@ export default function Page() {
               }
 
               document.cookie = `${question?.id}=${selectedAwnser}; path=/;`;
-              
+
               setSelectedAwnser(null);
               setTimeout(async () => {
                 await nextQuestion(correct);
