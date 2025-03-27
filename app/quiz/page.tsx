@@ -188,6 +188,8 @@ export default function Page() {
               } else {
                 setAwnser("wrong");
               }
+
+              document.cookie = `${question?.id}=${selectedAwnser}; path=/;`;
               
               setSelectedAwnser(null);
               setTimeout(async () => {
